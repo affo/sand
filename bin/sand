@@ -1,0 +1,6 @@
+#!venv/bin/python
+import sys
+from sand.cmd import main
+
+if __name__ == '__main__':
+    sys.exit(main())
