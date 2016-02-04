@@ -15,6 +15,10 @@ class Graph(object):
             distributed).
         '''
         self.n = n
+
+        if p < 0: p = 0
+        if p > 1: p = 1
+
         self.p = p
         self.w = w
         self.data = self._generate(n, p, w)
@@ -70,20 +74,30 @@ class AdjMatrixGraph(Graph):
     def _generate(self, n, p, w):
         m = [[0 for _ in xrange(n)] for _ in xrange(n)]
 
+        # given that the graph has always to be
+        # be connected, we have to create a random
+        # path from vertex 0 to n:
+        vertices = list(xrange(n))
+        fromv = random.choice(vertices)
+        vertices.remove(fromv)
+
+        while len(vertices) > 0:
+            tov = random.choice(vertices)
+
+            # ensure connection
+            m[fromv][tov] = random.randint(1, w)
+            m[tov][fromv] = m[fromv][tov]
+
+            fromv = tov
+            vertices.remove(fromv)
+
+        # now, we can add connections based
+        # on probability
         for i in xrange(n - 1):
             for j in xrange(i + 1, n):
-                if random.random() < p:
+                if not m[i][j] > 0 and random.random() < p:
                     m[i][j] = random.randint(1, w)
                     m[j][i] = m[i][j]
-
-        # we have to ensure that each vertex has at least
-        # one connection
-        for i, row in enumerate(m):
-            if not any(row):
-                vertices = range(i) + range(i + 1, n)
-                j = random.choice(vertices)
-                m[i][j] = random.randint(1, w)
-                m[j][i] = m[i][j]
 
         return m
 
@@ -120,25 +134,32 @@ class AdjListGraph(Graph):
         return r
 
     def _generate(self, n, p, w):
+        # for comments on method logic
+        # see AdjMatrixGraph._generate
         m = [[] for _ in xrange(n)]
+
+        vertices = list(xrange(n))
+        fromv = random.choice(vertices)
+        vertices.remove(fromv)
+
+        while len(vertices) > 0:
+            tov = random.choice(vertices)
+
+            # ensure connection
+            val = random.randint(1, w)
+            m[fromv].append((tov, val))
+            m[tov].append((fromv, val))
+
+            fromv = tov
+            vertices.remove(fromv)
 
         for i in xrange(n - 1):
             for j in xrange(i + 1, n):
-                if random.random() < p:
-                    connected = True
+                if not j in [el[0] for el in m[i]] and \
+                        random.random() < p:
                     val = random.randint(1, w)
                     m[i].append((j, val))
                     m[j].append((i, val))
-
-        # we have to ensure that each vertex has at least
-        # one connection
-        for i, row in enumerate(m):
-            if len(row) == 0:
-                vertices = range(i) + range(i + 1, n)
-                j = random.choice(vertices)
-                val = random.randint(1, w)
-                m[i].append((j, val))
-                m[j].append((i, val))
 
         return m
 
