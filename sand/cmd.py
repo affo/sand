@@ -9,13 +9,23 @@ _data_structures = {
 
 
 def _get_times(alg, p, w, ds, nos):
-    def timeme(nov):
-        def f():
-            graph = _data_structures[ds](nov, p, w)
-            alg(graph, random.randint(0, nov - 1))
-        return f
+    def timeme(graph):
+        return lambda: alg(graph, random.randint(0, graph.n - 1))
 
-    return [timeit.timeit(timeme(n), number=20) for n in nos]
+    # we could use the number parameter in timeit,
+    # but it is difficult to exclude graph generation
+    # from timing.
+    def repeatme(nov):
+        times = []
+
+        for _ in xrange(20):
+            graph = _data_structures[ds](nov, p, w)
+            t = timeit.timeit(timeme(graph), number=1)
+            times.insert(0, t)
+
+        return sum(times) / len(times)
+
+    return [repeatme(n) for n in nos]
 
 
 def breadth_first(args):
