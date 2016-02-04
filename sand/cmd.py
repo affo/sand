@@ -1,5 +1,6 @@
 import argparse, timeit, random, uuid
 from sand import bf, graph
+from sand import dijkstra as dj
 
 
 _data_structures = {
@@ -35,8 +36,16 @@ def breadth_first(args):
 
     return _get_times(bf.run, p, 1, ds, nos)
 
+def dijkstra(args):
+    p = args.p
+    ds = args.ds
+    nos = args.steps
+
+    return _get_times(dj.run, p, 10, ds, nos)
+
 _algorithms = {
     'bf': breadth_first,
+    'dj': dijkstra,
 }
 
 
