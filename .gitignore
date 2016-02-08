@@ -1,4 +1,9 @@
 *.pyc
 .vimrc
 
+*.class
+target
+.idea
+*.iml
+
 venv
