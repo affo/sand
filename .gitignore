@@ -6,4 +6,7 @@ target
 .idea
 *.iml
 
+*.csv
+*.out
+
 venv
