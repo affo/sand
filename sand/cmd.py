@@ -1,6 +1,7 @@
 import argparse, timeit, random, uuid
 from sand import bf, graph
 from sand import dijkstra as dj
+from sand import dijkstra_heap as djh
 
 
 _data_structures = {
@@ -43,9 +44,17 @@ def dijkstra(args):
 
     return _get_times(dj.run, p, 10, ds, nos)
 
+def dijkstra_heap(args):
+    p = args.p
+    ds = args.ds
+    nos = args.steps
+
+    return _get_times(djh.run, p, 10, ds, nos)
+
 _algorithms = {
     'bf': breadth_first,
     'dj': dijkstra,
+    'djh': dijkstra_heap
 }
 
 

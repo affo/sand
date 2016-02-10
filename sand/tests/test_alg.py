@@ -1,6 +1,6 @@
 from unittest import TestCase
 from sand.graph import AdjMatrixGraph
-from sand import dijkstra, bf
+from sand import dijkstra, bf, dijkstra_heap
 
 class AlgorithmsTestCase(TestCase):
     def setUp(self):
@@ -12,3 +12,8 @@ class AlgorithmsTestCase(TestCase):
 
         self.assertEqual(bf_res, dj_res)
 
+    def test_dijkstra_heap_is_same_as_dijkstra(self):
+        djh_res = dijkstra_heap.run(self.graph, 0)
+        dj_res = dijkstra.run(self.graph, 0)
+
+        self.assertEqual(djh_res, djh_res)
