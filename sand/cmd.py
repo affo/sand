@@ -2,6 +2,7 @@ import argparse, timeit, random, uuid
 from sand import bf, graph
 from sand import dijkstra as dj
 from sand import dijkstra_heap as djh
+from sand import bf_naive as bfn
 
 
 _data_structures = {
@@ -30,6 +31,13 @@ def _get_times(alg, p, w, ds, nos):
     return [repeatme(n) for n in nos]
 
 
+def breadth_first_naive(args):
+    p = args.p
+    ds = args.ds
+    nos = args.steps
+
+    return _get_times(bfn.run, p, 1, ds, nos)
+
 def breadth_first(args):
     p = args.p
     ds = args.ds
@@ -54,7 +62,8 @@ def dijkstra_heap(args):
 _algorithms = {
     'bf': breadth_first,
     'dj': dijkstra,
-    'djh': dijkstra_heap
+    'djh': dijkstra_heap,
+    'bfn': breadth_first_naive
 }
 
 
