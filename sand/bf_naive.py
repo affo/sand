@@ -4,18 +4,16 @@ def run(graph, vertex):
     current_distance = 0
 
     while any([v < 0 for v in res]):
-        new_layer = [ i for i in xrange(graph.n) if res[i] == current_distance ]
-        all_neighbors = []
+        to_explore = [ i for i in xrange(graph.n) if res[i] == current_distance ]
+        neighbors = []
         
-        for next_vertex in new_layer:
-            neighbors = graph.enumerate(next_vertex)
-            for v in neighbors:
-                all_neighbors.append(v[0])
+        for v in to_explore:
+            local_neighbors = graph.enumerate(v)
+            for n, c in local_neighbors:
+                if n not in neighbors:
+                    neighbors.append(n)
 
-        if all_neighbors == []:
-            return res
-
-        for n in all_neighbors:            
+        for n in neighbors:
             if res[n] == -1:
                 res[n] = current_distance + 1
 
