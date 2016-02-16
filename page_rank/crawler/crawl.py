@@ -17,17 +17,16 @@ def _load_adjlist(csv):
 class Crawler(object):
     p_move = float(conf.get('p_follow_link'))
 
-    def __init__(self, graph):
+    def __init__(self, graph, pos):
         self.graph = graph
-        self.stopped = False
-        # starting position is random
-        self.pos = random.choice(graph.keys())
+        self.active = True
+        self.pos = pos
 
     def next(self):
         if random.random() > self.p_move:
-            self.stopped = True
+            self.active = False
 
-        if self.stopped:
+        if not self.active:
             return
 
         next_pos = random.choice(self.graph[self.pos])
@@ -36,27 +35,31 @@ class Crawler(object):
 
 def main():
     csv_file = conf.get('output')
-    no_crawlers = int(conf.get('no_crawlers'))
-    times = 100
-    no_epochs = 50
+    times = int(conf.get('no_iterations'))
+    no_epochs = int(conf.get('no_epochs'))
 
     graph = _load_adjlist(csv_file)
 
-    x = {auth: -1 for auth in graph.keys()}
+    x = {auth: 1 - Crawler.p_move for auth in graph.keys()}
     for _ in xrange(times):
-        # generate crawlers
-        crawlers = [Crawler(graph) for _ in xrange(no_crawlers)]
+        crawlers = []
 
         # run epochs
         for _ in xrange(no_epochs):
+            # generate 1 - d crawlers
+            crawlers.extend(
+                [Crawler(graph, pos) for pos in graph.keys()
+                    if random.random() > Crawler.p_move]
+            )
             for crawler in crawlers:
                 crawler.next()
 
         for crawler in crawlers:
-            x[crawler.pos] += 1
+            if crawler.active:
+                x[crawler.pos] += 1
 
     # compute the average and normalize
-    x = {auth: float(rank) / times / no_crawlers
+    x = {auth: float(rank) / times / len(graph)
             for auth, rank in x.iteritems()}
 
     ranking = x.keys()
