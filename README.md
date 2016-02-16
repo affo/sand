@@ -1,3 +1,4 @@
+# README for `sand` Project
 ### Install
 
 Install `python-virtualenv`:
@@ -20,6 +21,41 @@ $ pip install -r requirements.txt # if you want to install both, use requirement
 ```
 $ make test
 ```
+
 ### Push charts to Plotly
-Before specifying `--push` while using the CLI, follow
+
+Before specifying `--plot` while using the CLI, follow
 the instructions here: https://plot.ly/python/user-guide/#Step-6.
+
+
+# README for `page\_rank` Project
+
+Every line of code listed below supposes that you `cd page\_rank`.
+
+### Install
+
+Install `python-virtualenv`:
+
+```
+$ sudo easy_install pip
+$ sudo pip install virtualenv
+```
+
+Create a virtual environment and install requirements:
+
+```
+$ virtualenv venv
+$ source pagerankrc
+$ pip install -r requirements.txt
+```
+
+Install [maven](https://maven.apache.org/install.html) and
+[docker](https://docs.docker.com/engine/installation/) and run `make it\_build`
+to install the requirements for the iterative version of PageRank.
+
+### The Makefile
+You can:
+
+* Generate the dataset from _re.public@polimi_: `make dataset`
+* Launch the stochastic PageRank: `make stochastic`
+* Launch the iterative PageRank: `make iterative`
