@@ -10,6 +10,7 @@ package it.polimi.sand;
 import org.apache.flink.api.common.functions.FilterFunction;
 import org.apache.flink.api.common.functions.FlatMapFunction;
 import org.apache.flink.api.common.functions.MapFunction;
+import org.apache.flink.api.common.operators.Order;
 import org.apache.flink.api.java.DataSet;
 import org.apache.flink.api.java.ExecutionEnvironment;
 import org.apache.flink.api.java.functions.FunctionAnnotation.ForwardedFields;
@@ -71,6 +72,7 @@ public class PageRank {
                         .filter(new EpsilonFilter()));
 
         // emit result
+        finalPageRanks = finalPageRanks.sortPartition(1, Order.DESCENDING);
         finalPageRanks.print();
         finalPageRanks.writeAsCsv(outputPath, "\n", ": ");
         // execute program
