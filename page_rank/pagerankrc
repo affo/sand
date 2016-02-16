@@ -1,3 +1,4 @@
 #!/bin/bash
 deactivate # deactivate venv if active
-export PYTHONPATH=`pwd`
+source venv/bin/activate && \
+    export PYTHONPATH=`pwd`
